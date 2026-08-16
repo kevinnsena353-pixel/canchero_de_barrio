@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canchero de Barrio — Diseña tu prenda</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;700&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Tipografías del manual de marca (carpeta fonts/) */
+  @font-face{
+    font-family:'Street Reich';
+    src:url('fonts/StreetReich.otf') format('opentype');
+    font-weight:400;font-style:normal;font-display:swap;
+  }
+  @font-face{
+    font-family:'Beatstreet';
+    src:url('fonts/Beatstreet.ttf') format('truetype');
+    font-weight:400;font-style:normal;font-display:swap;
+  }
+  @font-face{
+    font-family:'Alte Haas Grotesk';
+    src:url('fonts/AlteHaasGroteskRegular.ttf') format('truetype');
+    font-weight:400;font-style:normal;font-display:swap;
+  }
+  @font-face{
+    font-family:'Alte Haas Grotesk';
+    src:url('fonts/AlteHaasGroteskBold.ttf') format('truetype');
+    font-weight:700;font-style:normal;font-display:swap;
+  }
+
+  /* Manual: Street Reich (títulos) · Beatstreet (acento) · Alte Haas (cuerpo) */
+  :root{
+    --blue:#2E58A6;
+    --blue-dark:#1c3a6e;
+    --blue-deep:#0a1442;
+    --navy:#0a1442;
+    --black:#0a0a0a;
+    --white:#ffffff;
+    --cream:#f4f2ea;
+    --cream-2:#ffffff;
+    --line:rgba(10,10,10,.12);
+    --gray:#6b7280;
+    --radius:4px;
+    --shadow: 0 12px 30px rgba(0,0,0,.18);
+    --font-display:'Street Reich', 'Anton', Impact, sans-serif;
+    --font-accent:'Beatstreet', 'Caveat', cursive;
+    --font-body:'Alte Haas Grotesk', 'Work Sans', Helvetica, Arial, sans-serif;
+    --font-mono:'Space Mono', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;font-family:var(--font-body);background:var(--cream);color:var(--black);}
+  ::selection{background:var(--blue);color:#fff;}
+
+  .app{
+    display:flex;flex-direction:column;
+    height:100vh;height:100dvh;
+    min-height:0;
+  }
+
+  /* ---------- TOPBAR ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--blue-deep);
+    color:#fff;padding:0 20px;height:64px;flex:0 0 64px;
+    border-bottom:3px solid var(--black);
+  }
+  .brand{display:flex;align-items:center;gap:12px;min-width:0;}
+  .brand-logo{
+    height:42px;width:auto;max-width:180px;object-fit:contain;display:block;
+  }
+  .brand-logo-placeholder{
+    height:42px;min-width:120px;border:2px dashed rgba(255,255,255,.45);
+    border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:600;color:rgba(255,255,255,.7);padding:0 12px;
+    letter-spacing:.3px;white-space:nowrap;
+  }
+  .topbar-right{display:flex;align-items:center;gap:10px;}
+  .btn{
+    font-family:var(--font-body);font-weight:700;border:none;cursor:pointer;
+    border-radius:999px;padding:10px 18px;font-size:13px;letter-spacing:.3px;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+  }
+  .btn:active{transform:translateY(1px) scale(.98);}
+  .btn-primary{background:var(--white);color:var(--blue-deep);}
+  .btn-primary:hover{background:#fff;box-shadow:0 4px 14px rgba(255,255,255,.25);}
+  .btn-outline{
+    background:transparent;color:#fff;border:2px solid rgba(255,255,255,.35);
+  }
+  .btn-outline:hover{border-color:#fff;background:rgba(255,255,255,.08);}
+  .btn-reset-full{
+    width:100%;background:var(--blue-deep);color:#fff;border-radius:10px;
+    padding:12px 16px;font-size:13px;font-weight:700;margin-top:6px;
+  }
+  .btn-reset-full:hover{background:var(--blue-dark);box-shadow:0 4px 14px rgba(19,42,85,.35);}
+
+  /* ---------- WORKSPACE ---------- */
+  .workspace{flex:1 1 auto;display:flex;min-height:0;overflow:hidden;}
+
+  /* ----- left rail (icons) ----- */
+  .rail{
+    width:76px;flex:0 0 76px;background:var(--blue-deep);
+    display:flex;flex-direction:column;align-items:center;padding-top:16px;gap:4px;
+    border-right:3px solid var(--black);
+  }
+  .rail-item{
+    width:60px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;
+    color:#b9c8e6;cursor:pointer;border-radius:10px;font-size:10.5px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.4px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .rail-item svg{width:20px;height:20px;stroke:#b9c8e6;fill:none;stroke-width:1.8;}
+  .rail-item.active{background:rgba(255,255,255,.1);color:#fff;}
+  .rail-item.active svg{stroke:#fff;}
+  .rail-item:hover{color:#fff;}
+  .rail-item:hover svg{stroke:#fff;}
+
+  /* ----- mobile bottom nav (hidden on desktop) ----- */
+  .mobile-nav{
+    display:none;
+    flex:0 0 auto;
+    background:var(--blue-deep);
+    border-top:3px solid var(--black);
+    padding:6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+    gap:4px;
+    z-index:20;
+  }
+  .mobile-nav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    padding:10px 6px;border-radius:10px;color:#b9c8e6;cursor:pointer;
+    font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+    -webkit-tap-highlight-color:transparent;border:none;background:transparent;
+  }
+  .mobile-nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .mobile-nav-item.active{background:rgba(255,255,255,.12);color:#fff;}
+
+  /* ----- sidebar panel ----- */
+  .sidebar{
+    width:340px;flex:0 0 340px;background:var(--cream-2);
+    border-right:3px solid var(--black);overflow-y:auto;padding:20px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .sidebar h2{
+    font-family:var(--font-display);font-size:16px;margin:0 0 4px;color:var(--blue-deep);
+    letter-spacing:.3px;
+  }
+  .sidebar .subtext{font-size:12px;color:var(--gray);margin:0 0 14px;line-height:1.5;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .section{margin-bottom:22px;}
+  .section > label{
+    display:block;font-size:11.5px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.6px;color:var(--gray);margin-bottom:10px;
+  }
+
+  .swatches{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  .swatch{
+    width:34px;height:34px;border-radius:50%;cursor:pointer;position:relative;
+    border:2px solid rgba(0,0,0,.12);transition:transform .12s ease;
+    flex:0 0 auto;
+  }
+  .swatch:hover{transform:scale(1.08);}
+  .swatch.active::after{
+    content:"";position:absolute;inset:-5px;border-radius:50%;border:2px solid var(--blue);
+  }
+  .swatch.white{border-color:#c9c2ab;}
+  input[type="color"]{
+    -webkit-appearance:none;appearance:none;width:34px;height:34px;border:none;border-radius:50%;
+    padding:0;background:none;cursor:pointer;flex:0 0 auto;
+  }
+  input[type="color"]::-webkit-color-swatch-wrapper{padding:0;}
+  input[type="color"]::-webkit-color-swatch{border-radius:50%;border:2px solid rgba(0,0,0,.12);}
+
+  .size-options{display:flex;flex-wrap:wrap;gap:8px;}
+  .size-btn{
+    min-width:44px;padding:9px 6px;text-align:center;border:2px solid var(--line);
+    background:#fff;border-radius:8px;font-weight:800;font-size:12.5px;cursor:pointer;color:var(--black);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .size-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .clear-design-btn{
+    font-size:12px;font-weight:700;color:var(--blue-deep);background:#fff;
+    border:2px solid var(--line);border-radius:8px;cursor:pointer;
+    padding:9px 14px;width:100%;margin-bottom:12px;transition:border-color .12s, background .12s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .clear-design-btn:hover{border-color:var(--blue);background:var(--cream);}
+
+  /* ----- design gallery ----- */
+  .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .design-card{
+    position:relative;aspect-ratio:1/1;border:2px solid var(--line);border-radius:8px;overflow:hidden;
+    cursor:pointer;background:#fff;transition:border-color .15s ease, box-shadow .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .design-card img{width:100%;height:100%;object-fit:cover;display:block;}
+  .design-card:hover{border-color:var(--blue);}
+  .design-card.selected{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,88,166,.2);}
+  .design-card .dname{
+    position:absolute;bottom:0;left:0;right:0;background:rgba(12,12,12,.65);color:#fff;
+    font-size:9.5px;font-weight:700;padding:3px 5px;text-align:center;
+  }
+
+  .upload-marker{
+    margin-top:14px;border:2px dashed var(--blue);border-radius:var(--radius);
+    background:#fff;padding:14px;font-size:11.5px;color:var(--blue-deep);line-height:1.6;
+  }
+  .upload-marker b{display:block;font-size:12px;margin-bottom:4px;}
+  .upload-marker code{background:var(--cream);padding:1px 5px;border-radius:4px;font-size:11px;}
+
+  /* ----- model catalog (Modelos panel) ----- */
+  .model-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .model-card{
+    border:2px solid var(--line);border-radius:var(--radius);background:#fff;overflow:hidden;
+    cursor:pointer;transition:border-color .15s ease, box-shadow .15s ease;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .model-card:hover{border-color:var(--blue);}
+  .model-card.selected{border-color:var(--blue);box-shadow:0 0 0 3px rgba(46,88,166,.2);}
+  .model-thumb{
+    aspect-ratio:1/1;background:var(--cream);display:flex;align-items:center;justify-content:center;
+    color:var(--blue-deep);position:relative;overflow:hidden;
+  }
+  .model-thumb canvas,
+  .model-thumb img{
+    width:100%;height:100%;object-fit:cover;display:block;
+  }
+  .model-thumb .thumb-fallback{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+    width:100%;height:100%;color:var(--blue-deep);
+  }
+  .model-thumb .thumb-fallback svg{width:34px;height:34px;stroke:var(--blue-deep);fill:none;stroke-width:1.6;}
+  .model-info{padding:8px 10px;}
+  .model-info .mname{font-size:12px;font-weight:800;}
+  .model-info .mpath{font-size:9.5px;color:var(--gray);font-family:monospace;word-break:break-all;}
+  .model-badge{
+    display:inline-block;margin-top:4px;font-size:9px;font-weight:800;padding:2px 7px;border-radius:999px;
+  }
+  .model-badge.ready{background:#dff3e4;color:#1c7a3a;}
+  .model-badge.pending{background:#fbe6c9;color:#95590a;}
+
+  /* ---------- viewer ---------- */
+  .viewer{flex:1 1 auto;position:relative;background:
+      radial-gradient(circle at 50% 20%, #ffffff 0%, var(--cream) 55%, #e7e1cd 100%);
+    overflow:hidden;min-width:0;min-height:0;
+  }
+  #three-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;}
+
+  .viewer-loading{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;color:var(--blue-deep);font-family:var(--font-display);font-size:13px;letter-spacing:.5px;
+    background:var(--cream);z-index:5;transition:opacity .3s ease;
+  }
+  .spinner{width:34px;height:34px;border:4px solid var(--line);border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .viewer-tools{
+    position:absolute;top:16px;right:16px;background:#fff;border:2px solid var(--black);
+    border-radius:12px;display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow);z-index:4;
+  }
+  .tool-btn{
+    width:42px;height:42px;display:flex;align-items:center;justify-content:center;
+    border:none;background:#fff;cursor:pointer;border-bottom:1px solid var(--line);color:var(--blue-deep);
+    -webkit-tap-highlight-color:transparent;
+  }
+  .tool-btn:last-child{border-bottom:none;}
+  .tool-btn:hover{background:var(--cream);}
+  .tool-btn:disabled{opacity:.35;cursor:not-allowed;}
+  .tool-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;}
+
+  .viewer-badge{
+    position:absolute;top:16px;left:16px;background:rgba(12,12,12,.78);color:#fff;font-size:11.5px;
+    font-weight:700;padding:8px 12px;border-radius:999px;letter-spacing:.3px;z-index:4;
+    display:flex;align-items:center;gap:6px;max-width:calc(100% - 90px);
+  }
+  .viewer-badge .dot{width:7px;height:7px;border-radius:50%;background:#5ee38a;flex:0 0 auto;}
+
+  .viewer-bottombar{
+    position:absolute;left:16px;right:16px;bottom:16px;z-index:4;
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    background:#fff;border:2px solid var(--black);border-radius:14px;padding:10px 16px;
+    box-shadow:var(--shadow);flex-wrap:wrap;
+  }
+  .qty{display:flex;align-items:center;gap:10px;flex:0 0 auto;}
+  .qty button{
+    width:32px;height:32px;border-radius:50%;border:2px solid var(--black);background:#fff;
+    font-weight:800;cursor:pointer;font-size:15px;line-height:1;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .qty span{font-weight:800;min-width:18px;text-align:center;}
+  .price{font-family:var(--font-display);font-size:15px;color:var(--blue-deep);text-align:right;min-width:0;}
+  .price small{display:block;font-family:var(--font-body);font-size:10px;color:var(--gray);font-weight:600;}
+
+  /* ========== RESPONSIVE ========== */
+
+  /* Tablet landscape / small desktop */
+  @media (max-width: 1100px){
+    .sidebar{width:300px;flex:0 0 300px;padding:16px;}
+  }
+
+  /* Tablet / móvil: primero controles, después un visor 3D alto */
+  @media (max-width: 900px){
+    .workspace{
+      flex-direction:column;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .sidebar{
+      order:1;
+      width:100%;
+      flex:0 0 auto;
+      max-height:none;
+      border-right:none;
+      border-bottom:2px solid var(--black);
+      padding:14px 16px 18px;
+    }
+
+    /* Visor más alto + barra de precio debajo del canvas (no encima) */
+    .viewer{
+      order:2;
+      flex:0 0 auto;
+      display:flex;
+      flex-direction:column;
+      min-height:72vh;
+      height:72vh;
+      max-height:none;
+    }
+    #three-canvas{
+      position:relative !important;
+      inset:auto !important;
+      flex:1 1 auto;
+      width:100%;
+      height:auto;
+      min-height:0;
+    }
+    .viewer-loading{position:absolute;inset:0;bottom:auto;height:100%;}
+
+    .viewer-tools{
+      top:10px;right:10px;
+      flex-direction:row;
+      border-radius:4px;
+    }
+    .tool-btn{
+      width:38px;height:38px;
+      border-bottom:none;
+      border-right:1px solid var(--line);
+    }
+    .tool-btn:last-child{border-right:none;}
+
+    .viewer-badge{
+      top:10px;left:10px;
+      font-size:10.5px;padding:6px 10px;
+    }
+
+    .viewer-bottombar{
+      position:relative !important;
+      left:auto !important;right:auto !important;bottom:auto !important;
+      margin:0;
+      width:100%;
+      border-radius:0;
+      border-left:none;border-right:none;border-bottom:none;
+      border-top:2px solid var(--black);
+      padding:10px 12px;
+      gap:10px;
+      flex:0 0 auto;
+      background:#fff;
+      box-shadow:none;
+    }
+    .price{font-size:14px;}
+    .price small{font-size:9px;}
+    .config-add{padding:10px 12px;font-size:11px;}
+
+    .gallery-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .model-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  }
+
+  /* Phones: visor aún más alto para ver bien la prenda */
+  @media (max-width: 600px){
+    .topbar{height:64px;flex:0 0 64px;}
+    .config-nav{padding:10px 12px;gap:8px;}
+    .config-logo{margin:0 8px;}
+    .config-logo img{height:30px;}
+    .config-home{font-size:11px;}
+    .nav-panel-btn{padding:6px 8px;font-size:10px;gap:4px;}
+    .nav-panel-btn span{display:none;} /* solo iconos en móvil */
+    .nav-panel-btn svg{width:18px;height:18px;}
+
+    .viewer{
+      min-height:78vh;
+      height:78vh;
+    }
+    .sidebar{padding:12px 12px 16px;}
+    .sidebar h2,.panel h2{font-size:20px;}
+    .sidebar .subtext{font-size:12px;margin-bottom:12px;}
+    .section{margin-bottom:16px;}
+    .section > label{font-size:10.5px;margin-bottom:8px;}
+
+    .swatch, input[type="color"]{width:30px;height:30px;}
+    .size-btn{min-width:40px;padding:8px 5px;font-size:12px;}
+
+    .gallery-grid{grid-template-columns:repeat(3,1fr);gap:7px;}
+    .design-card .dname{font-size:8.5px;padding:2px 3px;}
+    .model-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
+    .model-info{padding:6px 8px;}
+    .model-info .mname{font-size:11px;}
+    .model-info .mpath{font-size:8.5px;}
+
+    .viewer-tools{top:8px;right:8px;}
+    .tool-btn{width:34px;height:34px;}
+    .tool-btn svg{width:16px;height:16px;}
+
+    .viewer-badge{
+      top:8px;left:8px;
+      font-size:10px;padding:5px 9px;
+      max-width:calc(100% - 120px);
+    }
+
+    .viewer-bottombar{
+      padding:8px 10px;
+      gap:8px;
+    }
+    .checkout-actions{gap:8px;}
+    .qty button{width:28px;height:28px;font-size:14px;}
+    .price{font-size:13px;line-height:1.2;}
+    .price small{font-size:8.5px;}
+    .config-add{padding:10px 12px;font-size:10px;}
+
+    .upload-marker{padding:10px;font-size:10.5px;margin-top:10px;}
+    .btn-reset-full{padding:11px 14px;font-size:12.5px;}
+  }
+
+  /* Very small phones */
+  @media (max-width: 380px){
+    .gallery-grid{grid-template-columns:repeat(2,1fr);}
+    .viewer-badge{display:none;}
+    .model-info .mpath{display:none;}
+    .price small{display:none;}
+    .config-add{padding:9px 10px;font-size:9.5px;}
+  }
+
+  /* Landscape phones */
+  @media (max-width: 900px) and (max-height: 500px) and (orientation: landscape){
+    .topbar{height:52px;flex:0 0 52px;}
+    .config-logo img{height:26px;}
+    .workspace{flex-direction:row;}
+    .sidebar{
+      order:1;width:42%;flex:0 0 42%;max-height:100%;
+      border-bottom:none;border-right:2px solid var(--black);
+      overflow-y:auto;
+    }
+    .viewer{order:2;flex:1 1 auto;min-height:0;height:auto;}
+    .viewer-bottombar{padding:6px 10px;}
+  }
+
+  /* Prefer reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .btn, .swatch, .design-card, .model-card{transition:none;}
+    .spinner{animation:none;}
+  }
+
+
+  /* ===== CANCHERO BRAND SYSTEM — alineado a index.html + manual ===== */
+  html,body{font-family:var(--font-body);background:var(--cream);color:var(--black);}
+  h1,h2,h3,h4,h5,h6,.panel h2,.section label,.price,.cart-panel-header h3{
+    font-family:var(--font-display);font-weight:400;text-transform:uppercase;letter-spacing:.5px;line-height:.95;
+  }
+  .app{height:100vh;height:100dvh;background:var(--cream);}
+
+  /* Header = mismo lenguaje que index */
+  .topbar{
+    height:80px;flex:0 0 80px;padding:0;
+    background:var(--black);border-bottom:1px solid rgba(255,255,255,.12);
+  }
+  .config-nav{
+    width:100%;max-width:1280px;margin:0 auto;padding:18px 32px;
+    display:flex;align-items:center;justify-content:space-between;height:100%;
+  }
+  .config-nav-left,.config-nav-right{display:flex;align-items:center;flex:1;gap:14px;}
+  .config-nav-right{justify-content:flex-end;}
+  .config-home{
+    color:var(--white);font-size:14px;font-weight:600;letter-spacing:.5px;
+    text-transform:uppercase;position:relative;padding:6px 0;text-decoration:none;white-space:nowrap;
+  }
+  .config-home::after{
+    content:'';position:absolute;left:0;bottom:0;width:0;height:2px;
+    background:var(--blue);transition:width .25s ease;
+  }
+  .config-home:hover::after{width:100%;}
+
+  /* Tabs Editar / Modelos junto a Inicio */
+  .nav-panel-tabs{display:flex;align-items:center;gap:6px;margin-left:4px;}
+  .nav-panel-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:7px 10px;border-radius:2px;border:0;cursor:pointer;
+    background:transparent;color:rgba(255,255,255,.55);
+    font-family:var(--font-mono);font-size:11px;font-weight:700;
+    letter-spacing:.6px;text-transform:uppercase;
+  }
+  .nav-panel-btn svg{
+    width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex:0 0 auto;
+  }
+  .nav-panel-btn:hover{color:var(--white);background:rgba(255,255,255,.08);}
+  .nav-panel-btn.active{background:var(--blue);color:var(--white);}
+  .config-logo{display:flex;align-items:center;justify-content:center;margin:0 24px;}
+  .config-logo img{height:44px;width:auto;transition:transform .25s ease;}
+  .config-logo:hover img{transform:scale(1.04);}
+  .config-cart-btn{
+    position:relative;color:var(--white);display:inline-flex;align-items:center;
+    justify-content:center;padding:6px;background:none;border:0;cursor:pointer;
+  }
+  .config-cart-btn .cart-count{
+    position:absolute;top:-3px;right:-6px;background:var(--blue);color:var(--white);
+    font-family:var(--font-mono);font-weight:700;font-size:10px;
+    width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  }
+
+  /* Sin rail lateral: los tabs viven en el header */
+  .workspace{background:var(--cream);}
+  .rail,.mobile-nav{display:none !important;}
+
+  /* Sidebar blanca limpia */
+  .sidebar{
+    background:var(--white);border-right:1px solid rgba(0,0,0,.12);
+  }
+  .sidebar h2,.panel h2{
+    font-family:var(--font-display);font-size:26px;color:var(--black);
+    text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px;
+  }
+  .sidebar .subtext,.panel .subtext,.panel p{color:var(--gray);line-height:1.6;font-size:13px;}
+  .section{border-top:1px solid rgba(0,0,0,.08);padding-top:16px;margin-bottom:18px;}
+  .section:first-child{border-top:none;padding-top:0;}
+  .section > label{
+    font-family:var(--font-mono);font-size:11px;font-weight:700;
+    letter-spacing:1.2px;color:var(--black);text-transform:uppercase;margin-bottom:10px;
+  }
+  .sidebar .subtext{font-family:var(--font-accent);font-size:15px;color:var(--gray);}
+
+  /* Controles: bordes rectos, azul como activo */
+  .swatch{border-radius:50%;border:2px solid rgba(0,0,0,.15);}
+  .swatch.active::after{border-color:var(--blue);}
+  .size-btn{
+    border-radius:2px;border:2px solid rgba(0,0,0,.15);
+    font-family:var(--font-mono);font-size:12px;letter-spacing:.5px;
+  }
+  .size-btn.active{background:var(--blue);border-color:var(--blue);color:var(--white);}
+  .clear-design-btn{
+    border-radius:2px;border:2px solid var(--black);
+    font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;font-size:11px;
+  }
+  .clear-design-btn:hover{background:var(--black);color:var(--white);border-color:var(--black);}
+  .design-card,.model-card{
+    border-radius:4px;border:1px solid rgba(0,0,0,.12);
+  }
+  .design-card:hover,.model-card:hover{border-color:var(--blue);}
+  .design-card.selected,.model-card.selected{
+    border-color:var(--blue)!important;box-shadow:0 0 0 2px rgba(46,88,166,.35);
+  }
+  .design-card .dname{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.3px;text-transform:uppercase;
+  }
+  .model-info .mname{font-family:var(--font-display);font-size:14px;text-transform:uppercase;letter-spacing:.3px;}
+  .model-info .mpath{font-family:var(--font-mono);color:var(--gray);}
+  .model-badge{
+    font-family:var(--font-mono);font-size:9px;letter-spacing:.5px;text-transform:uppercase;border-radius:2px;
+  }
+  .model-badge.ready{background:#dff3e4;color:#1c7a3a;}
+  .model-badge.pending{background:#f3e6c9;color:#8a5a10;}
+  .upload-marker{
+    border:1px dashed rgba(46,88,166,.45);border-radius:4px;
+    background:var(--cream);color:var(--black);
+  }
+  .upload-marker b{font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.5px;font-size:11px;}
+
+  .btn,.btn-reset-full{
+    border-radius:2px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;
+  }
+  .btn-primary,.btn-reset-full{background:var(--black);color:var(--white);}
+  .btn-primary:hover,.btn-reset-full:hover{background:var(--blue);box-shadow:none;}
+
+  /* Viewer */
+  .viewer{
+    background:
+      radial-gradient(circle at 50% 18%, rgba(46,88,166,.10), transparent 55%),
+      var(--cream);
+  }
+  .viewer-badge{
+    background:var(--black);border-radius:2px;
+    font-family:var(--font-mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;
+  }
+  .viewer-badge .dot{background:#5ee38a;}
+  .viewer-tools{
+    border:2px solid var(--black);border-radius:4px;box-shadow:none;overflow:hidden;
+  }
+  .tool-btn{background:var(--white);color:var(--black);}
+  .tool-btn:hover{background:var(--blue);color:var(--white);}
+  .tool-btn svg{stroke:currentColor;}
+  .viewer-bottombar{
+    border:2px solid var(--black);border-radius:4px;box-shadow:none;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    flex-wrap:wrap;
+  }
+  .checkout-actions{
+    display:flex;align-items:center;gap:12px;margin-left:auto;flex-wrap:wrap;min-width:0;
+  }
+  .price{
+    font-family:var(--font-display);color:var(--black);font-size:18px;
+    text-align:right;line-height:1.15;white-space:nowrap;
+  }
+  .price small{
+    display:block;font-family:var(--font-mono);color:var(--gray);
+    text-transform:uppercase;letter-spacing:.5px;font-size:10px;font-weight:600;
+  }
+  .qty button{
+    border:2px solid var(--black);border-radius:2px;font-family:var(--font-mono);
+  }
+  .qty button:hover{background:var(--black);color:var(--white);}
+
+  /* CTA dentro de la barra (precio a la izquierda, botón a la derecha) */
+  .config-add{
+    position:static !important;right:auto !important;bottom:auto !important;
+    background:var(--black);color:var(--white);
+    border-radius:2px;font-family:var(--font-mono);text-transform:uppercase;
+    letter-spacing:1px;padding:12px 16px;box-shadow:none;border:0;cursor:pointer;
+    white-space:nowrap;flex:0 0 auto;
+  }
+  .config-add:hover{background:var(--blue);transform:translateY(-1px);}
+
+  /* Cart = index */
+  .cart-panel{background:var(--white);color:var(--black);box-shadow:-12px 0 30px rgba(0,0,0,.25);}
+  .cart-panel-header{padding:20px 24px;border-bottom:2px solid var(--black);}
+  .cart-panel-header h3{font-size:24px;font-family:var(--font-display);text-transform:uppercase;}
+  .cart-close{font-family:var(--font-body);}
+  .cart-items{padding:18px 24px;}
+  .cart-item{background:var(--cream);border:1px solid rgba(0,0,0,.1);border-radius:4px;}
+  .cart-item-name,.cart-item-main b{font-family:var(--font-display);font-size:17px;text-transform:uppercase;}
+  .cart-item-price{font-family:var(--font-mono);color:var(--blue);}
+  .cart-summary{padding:20px 24px;border-top:2px solid var(--black);background:var(--white);}
+  .cart-total-row{font-family:var(--font-body);}
+  .cart-btn-primary{
+    background:var(--black);border-radius:2px;font-family:var(--font-mono);
+    letter-spacing:1px;text-transform:uppercase;
+  }
+  .cart-btn-primary:hover{background:var(--blue);}
+
+  @media (max-width:760px){
+    .topbar{height:68px;flex-basis:68px;}
+    .config-nav{padding:14px 20px;}
+    .config-logo img{height:34px;}
+    .config-logo{margin:0 16px;}
+    .config-home{font-size:12px;}
+    .sidebar h2,.panel h2{font-size:22px;}
+  }
+
+</style>
+<style id="cart-shared">
+.cart-panel{position:fixed;z-index:9999;right:0;top:0;width:min(430px,100vw);height:100vh;background:#f4f0e6;color:#111;box-shadow:-20px 0 60px rgba(0,0,0,.22);transform:translateX(105%);transition:.25s ease;display:flex;flex-direction:column}.cart-panel.open{transform:none}.cart-panel-header{display:flex;justify-content:space-between;align-items:center;padding:22px;border-bottom:2px solid #111}.cart-panel-header h3{margin:0;font-size:26px;text-transform:uppercase}.cart-close{border:0;background:none;font-size:34px;cursor:pointer}.cart-items{padding:18px;overflow:auto;flex:1}.cart-item{background:#fff;border:1px solid #ddd;padding:14px;margin-bottom:12px;display:flex;justify-content:space-between;gap:12px}.cart-item-main{display:grid;gap:5px}.cart-item-main small{color:#666}.cart-item-main b{font-size:15px}.cart-item-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}.cart-item-actions button{border:1px solid #111;background:#fff;min-width:30px;height:30px;cursor:pointer}.cart-item-actions .cart-remove{border:0;text-decoration:underline;width:auto}.cart-summary{padding:20px;border-top:2px solid #111;background:#fff}.cart-total-row{display:flex;justify-content:space-between;font-size:21px;margin-bottom:15px}.cart-btn-primary{width:100%;padding:14px;background:#111;color:#fff;border:0;font-weight:800;text-transform:uppercase;cursor:pointer}.cart-empty{text-align:center;padding:60px 15px;color:#666}.cart-badge{position:fixed;right:22px;bottom:22px;z-index:9998;border:0;background:#111;color:#fff;padding:13px 18px;font-weight:800;cursor:pointer;border-radius:999px}.config-cart-link{position:fixed;right:18px;top:18px;z-index:1000;background:#111;color:#fff;padding:11px 16px;border-radius:999px;text-decoration:none;font-weight:800}.config-add{position:static;background:#0a0a0a;color:#fff;border:0;padding:12px 16px;border-radius:2px;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;box-shadow:none}.cart-item{align-items:flex-start}.cart-item-thumb{width:72px;height:72px;flex:0 0 72px;border:1px solid #ddd;background:#efeadd;overflow:hidden}.cart-item-thumb img{width:100%;height:100%;object-fit:cover}.cart-specs{display:grid;gap:3px;margin:6px 0;font-size:12px;line-height:1.35}.cart-specs span{display:block}.color-dot{display:inline-block;width:12px;height:12px;border-radius:50%;border:1px solid #999;vertical-align:-1px;margin-right:4px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <nav class="config-nav">
+      <div class="config-nav-left">
+        <a href="index.html" class="config-home">Inicio</a>
+        <div class="nav-panel-tabs" role="tablist" aria-label="Secciones del configurador">
+          <button type="button" class="nav-panel-btn active" data-panel="editar" title="Editar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+            <span>Editar</span>
+          </button>
+          <button type="button" class="nav-panel-btn" data-panel="modelos" title="Modelos">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05"/><path d="M12 22.08V12"/></svg>
+            <span>Modelos</span>
+          </button>
+        </div>
+      </div>
+      <a href="index.html" class="config-logo" aria-label="Canchero de Barrio, inicio">
+        <img src="logo-canchero.svg" alt="Canchero de Barrio">
+      </a>
+      <div class="config-nav-right">
+        <button class="config-cart-btn" id="configCartBtn" type="button" aria-label="Carrito de compras">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 4h2l2.4 12.4a2 2 0 002 1.6h7.2a2 2 0 002-1.6L19 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/>
+          </svg>
+          <span class="cart-count" id="configCartCount">0</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="workspace">
+
+    <!-- SIDEBAR: controles primero en móvil -->
+    <aside class="sidebar">
+
+      <!-- PANEL: EDITAR (color + talla + diseños + reiniciar) -->
+      <div class="panel active" data-panel="editar">
+        <h2>Editar camiseta</h2>
+        <p class="subtext">Elegí color, talla y diseño de la prenda.</p>
+
+        <div class="section">
+          <label>Color de la camiseta</label>
+          <div class="swatches" id="swatches">
+            <div class="swatch active" data-color="#2E58A6" style="background:#2E58A6"></div>
+            <div class="swatch" data-color="#0c0c0c" style="background:#0c0c0c"></div>
+            <div class="swatch white" data-color="#ffffff" style="background:#ffffff"></div>
+            <div class="swatch" data-color="#1c3d7a" style="background:#1c3d7a"></div>
+            <div class="swatch" data-color="#7c8794" style="background:#7c8794"></div>
+            <input type="color" id="customColor" value="#2E58A6" title="Color personalizado">
+          </div>
+        </div>
+
+        <div class="section">
+          <label>Talla</label>
+          <div class="size-options" id="sizeOptions">
+            <div class="size-btn" data-size="XS">XS</div>
+            <div class="size-btn" data-size="S">S</div>
+            <div class="size-btn active" data-size="M">M</div>
+            <div class="size-btn" data-size="L">L</div>
+            <div class="size-btn" data-size="XL">XL</div>
+            <div class="size-btn" data-size="XXL">XXL</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <label>Diseño</label>
+          <button class="clear-design-btn" id="clearDesignBtn">Quitar diseño</button>
+          <div class="gallery-grid" id="galleryGrid"></div>
+          <div class="upload-marker">
+            <b>📌 Espacio marcado para tus diseños</b>
+            Agregá tus archivos <code>.png</code> o <code>.jpeg</code> en la carpeta <code>/designs/</code> y registralos en la lista <code>DESIGN_LIBRARY</code> dentro del código (nombre + ruta). Aparecerán automáticamente en esta galería.
+          </div>
+        </div>
+
+        <div class="section" style="margin-bottom:0;">
+          <button class="btn btn-reset-full" id="resetBtn">Reiniciar diseño</button>
+        </div>
+      </div>
+
+      <!-- PANEL: MODELOS -->
+      <div class="panel" data-panel="modelos">
+        <h2>Elige la prenda</h2>
+        <p class="subtext">Catálogo de prendas 3D disponibles.</p>
+        <div class="model-grid" id="modelGrid"></div>
+        <div class="upload-marker">
+          <b>📌 Espacio marcado para tus modelos 3D</b>
+          Subí cada archivo <code>.glb</code> en la ruta que aparece bajo cada tarjeta. Cuando el archivo exista, la tarjeta pasa a <b>lista ✓</b> y se genera sola una mini vista previa 3D del modelo.
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- VIEWER -->
+    <main class="viewer">
+      <div class="viewer-loading" id="loadingOverlay">
+        <div class="spinner"></div>
+        <span>Cargando visor 3D…</span>
+      </div>
+
+      <canvas id="three-canvas"></canvas>
+
+      <div class="viewer-badge"><span class="dot"></span>Vista previa 3D en vivo</div>
+
+      <div class="viewer-tools">
+        <button class="tool-btn" id="zoomInBtn" title="Acercar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        </button>
+        <button class="tool-btn" id="zoomOutBtn" title="Alejar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M8 11h6"/></svg>
+        </button>
+        <button class="tool-btn" id="undoBtn" title="Deshacer" disabled>
+          <svg viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M3 13a9 9 0 1 0 3-7.7L3 7"/></svg>
+        </button>
+        <button class="tool-btn" id="redoBtn" title="Rehacer" disabled>
+          <svg viewBox="0 0 24 24"><path d="M21 7v6h-6"/><path d="M21 13a9 9 0 1 1-3-7.7L21 7"/></svg>
+        </button>
+        <button class="tool-btn" id="resetViewBtn" title="Restablecer vista">
+          <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"/><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"/></svg>
+        </button>
+      </div>
+
+      <div class="viewer-bottombar">
+        <div class="qty">
+          <button id="qtyMinus" type="button">−</button>
+          <span id="qtyVal">1</span>
+          <button id="qtyPlus" type="button">+</button>
+        </div>
+        <div class="checkout-actions">
+          <div class="price" id="priceLabel"></div>
+          <button class="config-add" id="addConfiguredToCart" type="button">Agregar al carrito</button>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+/* =========================================================
+   CONFIGURADOR 3D
+   =========================================================
+   1) MODEL_LIBRARY  -> prendas en 3D (.glb) en /models/
+      Previews opcionales: /models/previews/{id}.png
+   2) DESIGN_LIBRARY -> diseños (.png / .jpeg) en /designs/
+   3) Logo: /logo/logo.png (o .jpeg)
+   ========================================================= */
+
+const MODEL_LIBRARY = [
+  { id:'camiseta-hombre', name:'Camiseta Hombre', glb:'models/t_shirt.glb', price:68000 },
+  { id:'camiseta-mujer',  name:'Camiseta Mujer',  glb:'models/female-t-shirt/source/model.glb', price:68000 },
+  { id:'jersey-manga-larga', name:'Jersey Manga Larga', glb:'models/jersey-manga-larga.glb', price:82000 },
+  { id:'saco-buzo',       name:'Saco / Buzo',     glb:'models/hoodie1.glb', price:98000 },
+  { id:'chaqueta',        name:'Chaqueta',        glb:'models/chaqueta.glb', price:135000 },
+  { id:'short',           name:'Short deportivo', glb:'models/short.glb', price:55000 },
+];
+
+const DESIGN_LIBRARY = [
+  { id:'d1', name:'Canchero Clásico', src:'designs/future.jpg' },
+  { id:'d2', name:'La Pelota No Se Mancha', src:'designs/king_kong.jpg' },
+  { id:'d3', name:'Fútbol Revolución', src:'designs/rana.jpg' },
+  { id:'d4', name:'Todo Se Cura Con Amor', src:'designs/Simpsons.jpg' },
+  { id:'d5', name:'Zapatos de Barrio', src:'designs/zapatos-cable.png' },
+  { id:'d6', name:'Isotipo Balón', src:'designs/isotipo-balon.png' },
+];
+
+const state = {
+  color: '#2E58A6',
+  size: 'M',
+  design: null,
+  designId: null,
+  modelId: MODEL_LIBRARY[0].id,
+};
+let history = [clone(state)];
+let historyIndex = 0;
+function clone(o){ return JSON.parse(JSON.stringify(o)); }
+
+/* ---------------- Panel switching (tabs en el header) ---------------- */
+function switchPanel(panel){
+  document.querySelectorAll('.nav-panel-btn').forEach(i=>{
+    i.classList.toggle('active', i.dataset.panel===panel);
+  });
+  document.querySelectorAll('.sidebar .panel').forEach(p=>{
+    p.classList.toggle('active', p.dataset.panel===panel);
+  });
+}
+document.querySelectorAll('.nav-panel-btn').forEach(item=>{
+  item.addEventListener('click', ()=> switchPanel(item.dataset.panel));
+});
+
+/* ---------------- UI: colors ---------------- */
+const swatchesEl = document.getElementById('swatches');
+function setColor(hex){
+  state.color = hex;
+  [...swatchesEl.querySelectorAll('.swatch')].forEach(s=>{
+    s.classList.toggle('active', s.dataset.color && s.dataset.color.toLowerCase()===hex.toLowerCase());
+  });
+  document.getElementById('customColor').value = hex;
+  applyStateToScene();
+}
+swatchesEl.querySelectorAll('.swatch[data-color]').forEach(s=>{
+  s.addEventListener('click', ()=>{ setColor(s.dataset.color); pushHistory(); });
+});
+document.getElementById('customColor').addEventListener('input', (e)=> setColor(e.target.value));
+document.getElementById('customColor').addEventListener('change', ()=> pushHistory());
+
+/* ---------------- UI: size ---------------- */
+const sizeOptions = document.getElementById('sizeOptions');
+sizeOptions.querySelectorAll('.size-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    sizeOptions.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    state.size = btn.dataset.size;
+    updatePrice();
+    pushHistory();
+  });
+});
+
+/* ---------------- UI: model catalog with GLB mini previews ---------------- */
+const modelGrid = document.getElementById('modelGrid');
+const thumbCanvases = {}; // id -> canvas element for live GLB preview
+
+function makeProceduralPreview(name, color){
+  const c = document.createElement('canvas');
+  c.width = 200; c.height = 200;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#EFEAdd';
+  ctx.fillRect(0,0,200,200);
+  ctx.fillStyle = 'rgba(46,88,166,0.08)';
+  ctx.beginPath(); ctx.arc(100,100,70,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = color || '#2E58A6';
+  ctx.beginPath();
+  ctx.moveTo(70,55);
+  ctx.lineTo(55,70);
+  ctx.lineTo(55,160);
+  ctx.lineTo(145,160);
+  ctx.lineTo(145,70);
+  ctx.lineTo(130,55);
+  ctx.lineTo(118,55);
+  ctx.lineTo(118,48);
+  ctx.quadraticCurveTo(100,42,82,48);
+  ctx.lineTo(82,55);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#EFEAdd';
+  ctx.beginPath();
+  ctx.ellipse(100,52,14,8,0,0,Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#132a55';
+  ctx.font = '700 11px Archivo, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(name.length > 16 ? name.slice(0,14)+'…' : name, 100, 185);
+  return c;
+}
+
+MODEL_LIBRARY.forEach(m=>{
+  const card = document.createElement('div');
+  card.className = 'model-card' + (m.id===state.modelId ? ' selected' : '');
+  card.dataset.id = m.id;
+
+  const thumb = document.createElement('div');
+  thumb.className = 'model-thumb';
+  thumb.dataset.modelId = m.id;
+
+  // Placeholder while GLB preview loads
+  const placeholder = makeProceduralPreview(m.name, state.color);
+  placeholder.className = 'thumb-placeholder';
+  thumb.appendChild(placeholder);
+
+  // Canvas that will receive a real 3D thumbnail of the .glb
+  const glbCanvas = document.createElement('canvas');
+  glbCanvas.width = 256;
+  glbCanvas.height = 256;
+  glbCanvas.style.display = 'none';
+  glbCanvas.className = 'thumb-glb';
+  thumb.appendChild(glbCanvas);
+  thumbCanvases[m.id] = { canvas: glbCanvas, placeholder, thumb };
+
+  const info = document.createElement('div');
+  info.className = 'model-info';
+  info.innerHTML = `
+    <div class="mname">${m.name}</div>
+    <div class="mpath">${m.glb}</div>
+    <span class="model-badge pending" data-status="${m.id}">verificando…</span>
+  `;
+
+  card.appendChild(thumb);
+  card.appendChild(info);
+
+  card.addEventListener('click', ()=>{
+    state.modelId = m.id;
+    [...modelGrid.children].forEach(c=>c.classList.remove('selected'));
+    card.classList.add('selected');
+    loadGarmentModel(m);
+    updatePrice();
+    pushHistory();
+  });
+  modelGrid.appendChild(card);
+});
+
+function markModelStatus(id, ready){
+  const badge = modelGrid.querySelector(`.model-badge[data-status="${id}"]`);
+  if(!badge) return;
+  badge.textContent = ready ? 'lista ✓' : 'pendiente';
+  badge.classList.toggle('ready', ready);
+  badge.classList.toggle('pending', !ready);
+}
+
+/** Render a small offscreen Three.js snapshot of a GLB into the card thumbnail */
+/**
+ * Mini vista previa 3D del .glb (tarjeta del catálogo).
+ *
+ * Ajustes si alguna prenda se ve cortada / muy arriba / muy chica:
+ *  - fillFraction → más bajo = más lejos (se ve completa). Ej: 0.70
+ *  - camYOffset   → subir/bajar la cámara (negativo = baja el modelo en el cuadro)
+ *  - lookYOffset  → subir/bajar el punto al que mira
+ *  - cam Z (2.8)  → más grande = más lejos
+ */
+function renderModelThumbnail(modelEntry, gltfScene){
+  const entry = thumbCanvases[modelEntry.id];
+  if(!entry) return;
+
+  const size = 256;
+  const canvas = entry.canvas;
+  canvas.width = size;
+  canvas.height = size;
+
+  const r = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, preserveDrawingBuffer:true });
+  r.setSize(size, size, false);
+  r.setClearColor(0xEFEAdd, 1);
+  r.outputColorSpace = THREE.SRGBColorSpace;
+
+  const s = new THREE.Scene();
+  s.add(new THREE.AmbientLight(0xffffff, 0.85));
+  const dl = new THREE.DirectionalLight(0xffffff, 1.6);
+  dl.position.set(2, 3, 4);
+  s.add(dl);
+  const dl2 = new THREE.DirectionalLight(0xffffff, 0.55);
+  dl2.position.set(-2, 1, -2);
+  s.add(dl2);
+
+  const clone = gltfScene.clone(true);
+  const previewMat = new THREE.MeshStandardMaterial({ color: 0x2E58A6, roughness:0.85, metalness:0.02 });
+  clone.traverse(o=>{ if(o.isMesh){ o.material = previewMat; } });
+
+  // 1) Reset + medir bounding box
+  clone.position.set(0, 0, 0);
+  clone.rotation.set(0, 0, 0);
+  clone.scale.set(1, 1, 1);
+  clone.updateMatrixWorld(true);
+
+  const box = new THREE.Box3().setFromObject(clone);
+  const center = box.getCenter(new THREE.Vector3());
+  const boxSize = box.getSize(new THREE.Vector3());
+
+  // 2) Centrar en el origen
+  clone.position.sub(center);
+
+  // 3) Escalar para que quepa en el cuadro (0.72 = ~72% del alto/ancho del canvas)
+  const maxDim = Math.max(boxSize.x, boxSize.y, boxSize.z) || 1;
+  const fillFraction = 0.72; // ← si se corta, bajá a 0.65; si se ve chico, subí a 0.80
+  clone.scale.setScalar(fillFraction / maxDim);
+  clone.updateMatrixWorld(true);
+
+  // 4) Re-centrar después del scale (evita que quede corrido arriba/abajo)
+  const box2 = new THREE.Box3().setFromObject(clone);
+  const center2 = box2.getCenter(new THREE.Vector3());
+  clone.position.x -= center2.x;
+  clone.position.y -= center2.y;
+  clone.position.z -= center2.z;
+  s.add(clone);
+
+  // 5) Cámara frontal centrada
+  const camYOffset = 0.0;
+  const lookYOffset = 0.0;
+  const cam = new THREE.PerspectiveCamera(30, 1, 0.05, 50);
+  cam.position.set(0, camYOffset, 2.8);
+  cam.lookAt(0, lookYOffset, 0);
+
+  r.render(s, cam);
+
+  entry.placeholder.style.display = 'none';
+  canvas.style.display = 'block';
+
+  r.dispose();
+  previewMat.dispose();
+}
+
+/* ---------------- UI: design gallery (single design, no parts) ---------------- */
+const galleryGrid = document.getElementById('galleryGrid');
+function refreshDesignSelection(){
+  [...galleryGrid.querySelectorAll('.design-card')].forEach(c=>{
+    c.classList.toggle('selected', c.dataset.designId === (state.designId || ''));
+  });
+}
+DESIGN_LIBRARY.forEach(d=>{
+  const card = document.createElement('div');
+  card.className = 'design-card';
+  card.dataset.designId = d.id;
+  const img = document.createElement('img');
+  img.alt = d.name;
+  img.onerror = ()=>{ img.src = placeholderDesignImage(d.name); };
+  img.src = d.src;
+  card.appendChild(img);
+  const tag = document.createElement('div');
+  tag.className = 'dname';
+  tag.textContent = d.name;
+  card.appendChild(tag);
+  card.addEventListener('click', ()=>{
+    state.design = img.src;
+    state.designId = d.id;
+    applyStateToScene();
+    refreshDesignSelection();
+    pushHistory();
+  });
+  galleryGrid.appendChild(card);
+});
+document.getElementById('clearDesignBtn').addEventListener('click', ()=>{
+  state.design = null;
+  state.designId = null;
+  applyStateToScene();
+  refreshDesignSelection();
+  pushHistory();
+});
+function placeholderDesignImage(label){
+  const c = document.createElement('canvas'); c.width = 300; c.height = 300;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#EFEAdd'; ctx.fillRect(0,0,300,300);
+  ctx.strokeStyle = '#2E58A6'; ctx.lineWidth = 6; ctx.strokeRect(10,10,280,280);
+  ctx.fillStyle = '#2E58A6';
+  ctx.font = '700 20px Archivo, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  wrapText(ctx, label, 150, 150, 240, 26);
+  return c.toDataURL('image/png');
+}
+function wrapText(ctx, text, x, y, maxWidth, lineHeight){
+  const words = text.split(' ');
+  let line = '', lines = [];
+  words.forEach(w=>{
+    const test = line + w + ' ';
+    if(ctx.measureText(test).width > maxWidth && line){ lines.push(line); line = w + ' '; }
+    else line = test;
+  });
+  lines.push(line);
+  const startY = y - (lines.length-1)*lineHeight/2;
+  lines.forEach((l,i)=> ctx.fillText(l.trim(), x, startY + i*lineHeight));
+}
+
+/* ---------------- UI: quantity + price ---------------- */
+let qty = 1;
+const qtyVal = document.getElementById('qtyVal');
+document.getElementById('qtyPlus').addEventListener('click', ()=>{ qty++; qtyVal.textContent=qty; updatePrice(); });
+document.getElementById('qtyMinus').addEventListener('click', ()=>{ qty=Math.max(1,qty-1); qtyVal.textContent=qty; updatePrice(); });
+function updatePrice(){
+  const model = MODEL_LIBRARY.find(m=>m.id===state.modelId) || MODEL_LIBRARY[0];
+  const total = model.price * qty;
+  document.getElementById('priceLabel').innerHTML =
+    `$${total.toLocaleString('es-CO')} COP <small>${model.name} · talla ${state.size} · x${qty}</small>`;
+}
+
+document.getElementById('addConfiguredToCart').addEventListener('click', ()=>{
+  const model = MODEL_LIBRARY.find(m=>m.id===state.modelId) || MODEL_LIBRARY[0];
+  const selectedDesign = DESIGN_LIBRARY.find(d=>d.id===state.designId);
+  const designName = selectedDesign?.name || 'Sin diseño';
+  if(window.CancheroCart){
+    window.CancheroCart.add({
+      type:'custom', key:`custom-${model.id}-${state.size}-${state.color}-${state.designId||'none'}`,
+      name:model.name+' personalizado', price:model.price, qty,
+      details:`Prenda: ${model.name} · Talla: ${state.size} · Diseño: ${designName} · Color: ${state.color}`,
+      modelId:model.id, modelName:model.name, designId:state.designId, designName,
+      designImage:selectedDesign?.src || null, size:state.size, color:state.color, colorName:state.color
+    });
+  }
+});
+
+/* ---------------- History (undo/redo) ---------------- */
+function pushHistory(){
+  history = history.slice(0, historyIndex+1);
+  history.push(clone(state));
+  historyIndex++;
+  updateHistoryButtons();
+}
+function updateHistoryButtons(){
+  document.getElementById('undoBtn').disabled = historyIndex<=0;
+  document.getElementById('redoBtn').disabled = historyIndex>=history.length-1;
+}
+document.getElementById('undoBtn').addEventListener('click', ()=>{
+  if(historyIndex<=0) return;
+  historyIndex--;
+  Object.assign(state, clone(history[historyIndex]));
+  syncUIFromState();
+  updateHistoryButtons();
+});
+document.getElementById('redoBtn').addEventListener('click', ()=>{
+  if(historyIndex>=history.length-1) return;
+  historyIndex++;
+  Object.assign(state, clone(history[historyIndex]));
+  syncUIFromState();
+  updateHistoryButtons();
+});
+function syncUIFromState(){
+  setColor(state.color);
+  sizeOptions.querySelectorAll('.size-btn').forEach(b=> b.classList.toggle('active', b.dataset.size===state.size));
+  [...modelGrid.children].forEach(c=> c.classList.toggle('selected', c.dataset.id===state.modelId));
+  const m = MODEL_LIBRARY.find(x=>x.id===state.modelId);
+  if(m) loadGarmentModel(m);
+  refreshDesignSelection();
+  applyStateToScene();
+  updatePrice();
+}
+
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  state.color = '#2E58A6';
+  state.size = 'M';
+  state.design = null;
+  state.designId = null;
+  syncUIFromState();
+  history = [clone(state)]; historyIndex = 0; updateHistoryButtons();
+});
+
+/* =========================================================
+   THREE.JS SCENE
+   ========================================================= */
+const canvas = document.getElementById('three-canvas');
+const viewer = document.querySelector('.viewer');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 100);
+camera.position.set(0, 0.55, 4.5);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 2.4;
+controls.maxDistance = 7;
+controls.target.set(0, 0.35, 0);
+controls.maxPolarAngle = Math.PI * 0.85;
+controls.minPolarAngle = Math.PI * 0.15;
+
+// Lighting
+scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+const key = new THREE.DirectionalLight(0xffffff, 2.1);
+key.position.set(2.5, 4, 3);
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x9db6e0, 0.9);
+fill.position.set(-3, 1.5, -2);
+scene.add(fill);
+const rim = new THREE.DirectionalLight(0xffffff, 0.7);
+rim.position.set(0, 2, -4);
+scene.add(rim);
+
+// Soft contact shadow
+const shadowTex = makeRadialShadowTexture();
+const shadowMat = new THREE.MeshBasicMaterial({ map: shadowTex, transparent:true, depthWrite:false });
+const shadowPlane = new THREE.Mesh(new THREE.PlaneGeometry(2.6, 2.6), shadowMat);
+shadowPlane.rotation.x = -Math.PI/2;
+shadowPlane.position.y = -0.7;
+scene.add(shadowPlane);
+function makeRadialShadowTexture(){
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(128,128,10,128,128,128);
+  g.addColorStop(0,'rgba(0,0,0,0.35)');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle = g; ctx.fillRect(0,0,256,256);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+/* ---------- Garment group ---------- */
+const garment = new THREE.Group();
+scene.add(garment);
+
+// Design texture (drawn on canvas) — projected onto the mesh surface like a real print
+const designCanvas = document.createElement('canvas');
+designCanvas.width = 1024;
+designCanvas.height = 1024;
+const designTexture = new THREE.CanvasTexture(designCanvas);
+designTexture.colorSpace = THREE.SRGBColorSpace;
+designTexture.needsUpdate = true;
+designTexture.wrapS = THREE.ClampToEdgeWrapping;
+designTexture.wrapT = THREE.ClampToEdgeWrapping;
+
+/**
+ * Print region in WORLD space (updated after each model is fitted).
+ * The design is planar-projected from the front onto the mesh, so it
+ * sticks to the fabric and deforms with the geometry when you orbit —
+ * same look as a real DTG / sublimation print (see reference video).
+ */
+const printUniforms = {
+  designMap:   { value: designTexture },
+  designOn:    { value: 0 },
+  printCenter: { value: new THREE.Vector3(0, 0.2, 0) },
+  printSize:   { value: new THREE.Vector2(0.9, 1.05) }, // width, height in world units
+  printFront:  { value: 1.0 } // only show on faces pointing roughly forward
+};
+
+/** Create a MeshStandardMaterial with front planar design projection baked into the shader */
+function createGarmentMaterial(baseColor, existingMap = null){
+  const mat = new THREE.MeshStandardMaterial({
+    color: new THREE.Color(baseColor),
+    map: existingMap || null,
+    roughness: 0.82,
+    metalness: 0.02,
+    side: THREE.DoubleSide
+  });
+
+  mat.onBeforeCompile = (shader)=>{
+    // Share the same uniform objects so updates propagate to every mesh
+    shader.uniforms.designMap   = printUniforms.designMap;
+    shader.uniforms.designOn    = printUniforms.designOn;
+    shader.uniforms.printCenter = printUniforms.printCenter;
+    shader.uniforms.printSize   = printUniforms.printSize;
+    shader.uniforms.printFront  = printUniforms.printFront;
+
+    shader.vertexShader = shader.vertexShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+        varying vec3 vWorldPos;
+        varying vec3 vWorldNormal;`
+      )
+      .replace(
+        '#include <worldpos_vertex>',
+        `#include <worldpos_vertex>
+        vWorldPos = (modelMatrix * vec4(transformed, 1.0)).xyz;
+        vWorldNormal = normalize(mat3(modelMatrix) * normal);`
+      );
+
+    shader.fragmentShader = shader.fragmentShader
+      .replace(
+        '#include <common>',
+        `#include <common>
+        uniform sampler2D designMap;
+        uniform float designOn;
+        uniform vec3 printCenter;
+        uniform vec2 printSize;
+        uniform float printFront;
+        varying vec3 vWorldPos;
+        varying vec3 vWorldNormal;`
+      )
+      .replace(
+        '#include <map_fragment>',
+        `#include <map_fragment>
+        // --- Chest print: planar projection from the front (world X/Y) ---
+        if(designOn > 0.5){
+          vec2 local = (vWorldPos.xy - printCenter.xy) / printSize + 0.5;
+          // Soft edge falloff inside the print rectangle
+          float inRect = step(0.0, local.x) * step(local.x, 1.0)
+                       * step(0.0, local.y) * step(local.y, 1.0);
+          // Only on front-facing surface (normal pointing toward +Z)
+          float frontMask = smoothstep(0.05, 0.35, vWorldNormal.z);
+          vec4 designSample = texture2D(designMap, local);
+          float a = designSample.a * inRect * frontMask * designOn;
+          // Premultiplied-style blend over garment color
+          diffuseColor.rgb = mix(diffuseColor.rgb, designSample.rgb, a);
+        }`
+      );
+
+    mat.userData.shader = shader;
+  };
+
+  // Force shader recompile when needed
+  mat.customProgramCacheKey = () => 'garment-print-v1';
+  return mat;
+}
+
+const garmentMaterial = createGarmentMaterial(state.color);
+
+/** Center, scale and place any object so it fits nicely in the main camera view */
+function fitObjectInView(object){
+  object.position.set(0, 0, 0);
+  object.rotation.set(0, 0, 0);
+  object.scale.set(1, 1, 1);
+  object.updateMatrixWorld(true);
+
+  const box = new THREE.Box3().setFromObject(object);
+  if(box.isEmpty()) return { width: 1, height: 1, depth: 1, minY: -1, maxY: 1, maxZ: 0.5 };
+
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+
+  object.position.sub(center);
+
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  // Un poco más chico para dejar aire sobre la barra de precio (desktop)
+  const target = 1.95;
+  const scale = target / maxDim;
+  object.scale.setScalar(scale);
+
+  object.updateMatrixWorld(true);
+  const box2 = new THREE.Box3().setFromObject(object);
+  const center2 = box2.getCenter(new THREE.Vector3());
+  object.position.x -= center2.x;
+  object.position.z -= center2.z;
+  object.position.y -= box2.min.y;
+  // Sube el modelo para que el bajo no quede encima del precio
+  object.position.y += -0.55;
+
+  object.updateMatrixWorld(true);
+  const box3 = new THREE.Box3().setFromObject(object);
+  const size3 = box3.getSize(new THREE.Vector3());
+
+  return {
+    width: size3.x,
+    height: size3.y,
+    depth: size3.z,
+    minY: box3.min.y,
+    maxY: box3.max.y,
+    maxZ: box3.max.z,
+    minZ: box3.min.z
+  };
+}
+
+/**
+ * Configure the print region to match a large chest print
+ * (proportions like a real full-front DTG on a t-shirt).
+ */
+function updatePrintRegion(dims){
+  const bodyW = dims?.width || 1.2;
+  const bodyH = dims?.height || 2.0;
+  const minY  = dims?.minY ?? -0.55;
+  const maxY  = dims?.maxY ?? 1.4;
+
+  // Large chest print ~60% width × ~52% height of the body
+  const printW = Math.max(0.55, bodyW * 0.60);
+  const printH = Math.max(0.65, bodyH * 0.52);
+
+  // Center on upper-middle chest (below collar, above belly)
+  const chestY = minY + (maxY - minY) * 0.58;
+
+  printUniforms.printCenter.value.set(0, chestY, 0);
+  printUniforms.printSize.value.set(printW, printH);
+  printUniforms.designOn.value = state.design ? 1 : 0;
+}
+
+function applyColorToGarment(hex){
+  const c = new THREE.Color(hex);
+  garment.traverse(obj=>{
+    if(obj.isMesh && obj.material && obj.material.color){
+      obj.material.color.copy(c);
+    }
+  });
+  if(garmentMaterial.color) garmentMaterial.color.copy(c);
+}
+
+function buildProceduralGarment(){
+  garment.clear();
+
+  const body = new THREE.Group();
+  const mat = createGarmentMaterial(state.color);
+
+  const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.72, 1.55, 48, 8, false), mat);
+  torso.position.y = 0.05;
+  body.add(torso);
+
+  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.045, 16, 32), mat);
+  collar.position.y = 0.83;
+  collar.rotation.x = Math.PI / 2;
+  body.add(collar);
+
+  const sleeveGeo = new THREE.CylinderGeometry(0.24, 0.19, 0.62, 24);
+  const sleeveL = new THREE.Mesh(sleeveGeo, mat);
+  sleeveL.position.set(-0.86, 0.48, 0);
+  sleeveL.rotation.z = Math.PI / 2.55;
+  body.add(sleeveL);
+  const sleeveR = sleeveL.clone();
+  sleeveR.position.x = 0.86;
+  sleeveR.rotation.z = -Math.PI / 2.55;
+  body.add(sleeveR);
+
+  const hem = new THREE.Mesh(new THREE.CylinderGeometry(0.73, 0.73, 0.06, 40), mat);
+  hem.position.y = -0.73;
+  body.add(hem);
+
+  garment.add(body);
+  const dims = fitObjectInView(body);
+  updatePrintRegion(dims);
+}
+
+/* ---------- Load a garment model from MODEL_LIBRARY ---------- */
+const loader = new GLTFLoader();
+let currentLoadId = 0;
+
+function loadGarmentModel(modelEntry){
+  const loadId = ++currentLoadId;
+
+  loader.load(
+    modelEntry.glb,
+    (gltf)=>{
+      if(loadId !== currentLoadId) return;
+
+      markModelStatus(modelEntry.id, true);
+      try { renderModelThumbnail(modelEntry, gltf.scene); } catch(e){ console.warn('thumb', e); }
+
+      garment.clear();
+
+      const model = gltf.scene;
+      model.traverse(obj=>{
+        if(obj.isMesh){
+          const base = Array.isArray(obj.material) ? obj.material[0] : obj.material;
+          const existingMap = (base && base.map) ? base.map : null;
+          obj.material = createGarmentMaterial(state.color, existingMap);
+          obj.castShadow = false;
+          obj.receiveShadow = false;
+        }
+      });
+
+      garment.add(model);
+      const dims = fitObjectInView(model);
+      updatePrintRegion(dims);
+      applyStateToScene();
+
+      camera.position.set(0, 0.55, 4.5);
+      controls.target.set(0, 0.35, 0);
+      controls.update();
+    },
+    undefined,
+    ()=>{
+      if(loadId !== currentLoadId) return;
+      markModelStatus(modelEntry.id, false);
+      buildProceduralGarment();
+      applyStateToScene();
+    }
+  );
+}
+
+function finishInitialLoad(){
+  document.getElementById('loadingOverlay').style.opacity = '0';
+  setTimeout(()=> document.getElementById('loadingOverlay').style.display='none', 300);
+  animate();
+
+  MODEL_LIBRARY.forEach((m, i)=>{
+    if(i === 0) return;
+    setTimeout(()=>{
+      loader.load(
+        m.glb,
+        (gltf)=>{
+          markModelStatus(m.id, true);
+          try { renderModelThumbnail(m, gltf.scene); } catch(e){}
+        },
+        undefined,
+        ()=> markModelStatus(m.id, false)
+      );
+    }, 400 + i * 350);
+  });
+}
+
+/* ---------- Apply state (color / design) to the live scene ---------- */
+function applyStateToScene(){
+  applyColorToGarment(state.color);
+  printUniforms.designOn.value = state.design ? 1 : 0;
+  drawDesignToCanvas();
+}
+
+function drawDesignToCanvas(){
+  const ctx = designCanvas.getContext('2d');
+  ctx.clearRect(0, 0, designCanvas.width, designCanvas.height);
+  designTexture.needsUpdate = true;
+
+  const dataUrl = state.design;
+  if(!dataUrl){
+    printUniforms.designOn.value = 0;
+    return;
+  }
+
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = ()=>{
+    ctx.clearRect(0, 0, designCanvas.width, designCanvas.height);
+    // Fill the print area almost edge-to-edge (real DTG look)
+    const pad = 4;
+    const maxW = designCanvas.width - pad * 2;
+    const maxH = designCanvas.height - pad * 2;
+    const scale = Math.min(maxW / img.width, maxH / img.height);
+    const w = img.width * scale;
+    const h = img.height * scale;
+    ctx.drawImage(img, (designCanvas.width - w) / 2, (designCanvas.height - h) / 2, w, h);
+    designTexture.needsUpdate = true;
+    printUniforms.designOn.value = 1;
+  };
+  img.onerror = ()=>{
+    printUniforms.designOn.value = 0;
+  };
+  img.src = dataUrl;
+}
+
+/* ---------- Resize ---------- */
+function resizeRenderer(){
+  // En móvil el canvas ya no ocupa todo el .viewer (la barra de precio está debajo).
+  // Usamos el tamaño real del canvas para no dibujar debajo del precio.
+  const w = canvas.clientWidth || viewer.clientWidth;
+  const h = canvas.clientHeight || viewer.clientHeight;
+  if(w < 2 || h < 2) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resizeRenderer);
+resizeRenderer();
+
+/* ---------- Render loop ---------- */
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+/* ---------- Toolbar: zoom / reset ---------- */
+document.getElementById('zoomInBtn').addEventListener('click', ()=>{
+  camera.position.lerp(controls.target, 0.18);
+});
+document.getElementById('zoomOutBtn').addEventListener('click', ()=>{
+  const dir = camera.position.clone().sub(controls.target).normalize();
+  camera.position.add(dir.multiplyScalar(0.5));
+});
+document.getElementById('resetViewBtn').addEventListener('click', ()=>{
+  camera.position.set(0, 0.55, 4.5);
+  controls.target.set(0, 0.35, 0);
+});
+
+/* ---------- init ---------- */
+refreshDesignSelection();
+updatePrice();
+loadGarmentModel(MODEL_LIBRARY.find(m=>m.id===state.modelId));
+finishInitialLoad();
+</script>
+
+<div class="cart-panel" id="cartPanel" aria-hidden="true"><div class="cart-panel-header"><h3>Tu carrito</h3><button class="cart-close" id="cartClose" type="button">×</button></div><div class="cart-items" id="cartItems"></div><div class="cart-summary"><div class="cart-total-row"><span>Total</span><strong id="cartTotal">$0 COP</strong></div><button class="cart-btn-primary" id="checkoutBtn" type="button">Ir a pagar</button></div></div>
+<script src="js/cart.js"></script>
+</body>
+</html>

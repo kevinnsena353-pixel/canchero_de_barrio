@@ -6,9 +6,30 @@
 <title>Canchero de Barrio — Hecho en el barrio, para todos los que juegan su propia cancha.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;700&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="logo-zapatos.svg">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+.customizer-cta{padding:clamp(60px,8vw,110px) 0;background:#0c0c0c;color:#fff;overflow:hidden;}
+.customizer-cta-inner{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);align-items:center;gap:50px;}
+.customizer-cta .eyebrow{color:#fff;opacity:.7;}
+.customizer-cta h2{margin:10px 0 18px;font-family:Anton,sans-serif;font-size:clamp(42px,6vw,82px);line-height:.95;text-transform:uppercase;}
+.customizer-cta p{max-width:620px;margin:0 0 28px;color:rgba(255,255,255,.72);font-size:18px;line-height:1.6;}
+.customizer-cta .btn-primary{display:inline-flex;align-items:center;text-decoration:none;}
+.customizer-preview{min-height:330px;display:flex;align-items:center;justify-content:center;position:relative;}
+.customizer-preview:before{content:"";position:absolute;width:280px;height:280px;border:1px solid rgba(255,255,255,.18);border-radius:50%;}
+.shirt-shape{width:190px;height:220px;background:#2E58A6;clip-path:polygon(30% 0,43% 8%,57% 8%,70% 0,100% 25%,82% 48%,70% 37%,70% 100%,30% 100%,30% 37%,18% 48%,0 25%);display:flex;align-items:center;justify-content:center;transform:rotate(-5deg);box-shadow:0 20px 50px rgba(0,0,0,.35);}
+.shirt-shape span{font-family:Anton,sans-serif;font-size:34px;color:#fff;transform:rotate(5deg);}
+.nav-config-link{font-weight:800;}
+@media(max-width:800px){.customizer-cta-inner{grid-template-columns:1fr;text-align:center;}.customizer-cta p{margin-left:auto;margin-right:auto;}.customizer-preview{min-height:260px;}}
+</style>
+<style id="cart-shared">
+.cart-panel{position:fixed;z-index:9999;right:0;top:0;width:min(430px,100vw);height:100vh;background:#f4f0e6;color:#111;box-shadow:-20px 0 60px rgba(0,0,0,.22);transform:translateX(105%);transition:.25s ease;display:flex;flex-direction:column}.cart-panel.open{transform:none}.cart-panel-header{display:flex;justify-content:space-between;align-items:center;padding:22px;border-bottom:2px solid #111}.cart-panel-header h3{margin:0;font-size:26px;text-transform:uppercase}.cart-close{border:0;background:none;font-size:34px;cursor:pointer}.cart-items{padding:18px;overflow:auto;flex:1}.cart-item{background:#fff;border:1px solid #ddd;padding:14px;margin-bottom:12px;display:flex;justify-content:space-between;gap:12px}.cart-item-main{display:grid;gap:5px}.cart-item-main small{color:#666}.cart-item-main b{font-size:15px}.cart-item-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}.cart-item-actions button{border:1px solid #111;background:#fff;min-width:30px;height:30px;cursor:pointer}.cart-item-actions .cart-remove{border:0;text-decoration:underline;width:auto}.cart-summary{padding:20px;border-top:2px solid #111;background:#fff}.cart-total-row{display:flex;justify-content:space-between;font-size:21px;margin-bottom:15px}.cart-btn-primary{width:100%;padding:14px;background:#111;color:#fff;border:0;font-weight:800;text-transform:uppercase;cursor:pointer}.cart-empty{text-align:center;padding:60px 15px;color:#666}.cart-badge{position:fixed;right:22px;bottom:22px;z-index:9998;border:0;background:#111;color:#fff;padding:13px 18px;font-weight:800;cursor:pointer;border-radius:999px}.config-cart-link{position:fixed;right:18px;top:18px;z-index:1000;background:#111;color:#fff;padding:11px 16px;border-radius:999px;text-decoration:none;font-weight:800}.config-add{position:fixed;right:18px;bottom:18px;z-index:1000;background:#2E58A6;color:#fff;border:0;padding:15px 20px;border-radius:999px;font-weight:800;cursor:pointer;box-shadow:0 8px 25px rgba(0,0,0,.2)}.cart-item{align-items:flex-start}.cart-item-thumb{width:72px;height:72px;flex:0 0 72px;border:1px solid #ddd;background:#efeadd;overflow:hidden}.cart-item-thumb img{width:100%;height:100%;object-fit:cover}.cart-specs{display:grid;gap:3px;margin:6px 0;font-size:12px;line-height:1.35}.cart-specs span{display:block}.color-dot{display:inline-block;width:12px;height:12px;border-radius:50%;border:1px solid #999;vertical-align:-1px;margin-right:4px}
+</style>
+
+<style id="inline-checkout-style">
+.cart-view,.checkout-view{display:flex;flex-direction:column;flex:1;min-height:0}.checkout-view{overflow:auto;padding:18px}.checkout-view form{display:flex;flex-direction:column;gap:12px}.checkout-back{align-self:flex-start;border:0;background:none;padding:0 0 4px;font-weight:800;cursor:pointer;text-decoration:underline}.checkout-intro span{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#666;font-weight:800}.checkout-intro h4{font-size:25px;text-transform:uppercase;margin:4px 0 7px}.checkout-intro p{font-size:13px;line-height:1.45;color:#666;margin:0 0 6px}.checkout-view label{display:grid;gap:5px;font-size:13px;font-weight:800}.checkout-view input,.checkout-view textarea{width:100%;box-sizing:border-box;border:1px solid #bbb;background:#fff;padding:11px;font:inherit}.checkout-view textarea{min-height:75px;resize:vertical}.checkout-order{border-top:1px solid #ddd;border-bottom:1px solid #ddd;padding:10px 0}.checkout-mini-item{display:grid;grid-template-columns:52px 1fr;gap:9px;padding:8px 0}.checkout-mini-thumb{width:52px;height:52px;background:#efeadd;border:1px solid #ddd;overflow:hidden}.checkout-mini-thumb img{width:100%;height:100%;object-fit:cover}.checkout-mini-title{font-weight:800;font-size:13px}.checkout-mini-specs{font-size:11px;color:#666;line-height:1.4;margin-top:3px}.checkout-total{display:flex;justify-content:space-between;border-top:2px solid #111;padding-top:13px;margin-top:2px;font-size:18px}.checkout-pay{margin-top:0}.checkout-note{font-size:11px;color:#777;line-height:1.4;margin:0}.checkout-success{padding:40px 4px;text-align:center}.checkout-success h4{font-size:28px;text-transform:uppercase;margin:0 0 10px}.checkout-success p{color:#666;line-height:1.5}.checkout-success button{border:0;background:#111;color:#fff;padding:12px 18px;font-weight:800;cursor:pointer}.cart-panel.checkout-open .cart-view{display:none}.cart-panel:not(.checkout-open) .checkout-view{display:none}
+</style>
 </head>
 <body>
 
@@ -27,6 +48,7 @@
 
     <div class="nav-right">
       <a href="#colecciones">Tienda</a>
+      <a href="canchero_configurador_ed.html" class="nav-config-link">Diseña tu camisa</a>
       <a href="#contacto">Contacto</a>
       <div class="icon-group">
         <button class="icon-btn" id="searchBtn" aria-label="Ir a colecciones">
@@ -48,6 +70,7 @@
     <div class="mobile-nav" id="mobileMenu">
       <a href="#historia">Nuestra historia</a>
       <a href="#colecciones">Tienda</a>
+      <a href="canchero_configurador_ed.html" class="nav-config-link">Diseña tu camisa</a>
       <a href="#contacto">Contacto</a>
     </div>
   </nav>
@@ -161,6 +184,21 @@
   </div>
 </section>
 
+<!-- ===== CONFIGURADOR ===== -->
+<section class="customizer-cta" id="diseña">
+  <div class="wrap customizer-cta-inner">
+    <div class="customizer-copy">
+      <span class="eyebrow">Tu camisa. Tu diseño.</span>
+      <h2>Diseña tu propia camisa.</h2>
+      <p>Elige el modelo, color, talla y diseño que quieras y mira tu prenda en nuestro configurador 3D.</p>
+      <a href="canchero_configurador_ed.html" class="btn btn-primary">Diseñar mi camisa →</a>
+    </div>
+    <div class="customizer-preview" aria-hidden="true">
+      <div class="shirt-shape"><span>3D</span></div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== CTA ===== -->
 <section class="cta-band" id="contacto">
   <div class="wrap">
@@ -229,22 +267,108 @@
 <div class="toast" id="toast">Agregado al carrito ⚽</div>
 <div class="cart-panel" id="cartPanel" aria-hidden="true">
   <div class="cart-panel-header">
-    <h3>Tu carrito</h3>
+    <h3 id="cartPanelTitle">Tu carrito</h3>
     <button class="cart-close" id="cartClose" type="button" aria-label="Cerrar carrito">×</button>
   </div>
-  <div class="cart-items" id="cartItems"></div>
-  <div class="cart-summary">
-    <div class="cart-total-row">
-      <span>Total</span>
-      <strong id="cartTotal">$0</strong>
+
+  <div id="cartView" class="cart-view">
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-summary">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <strong id="cartTotal">$0</strong>
+      </div>
+      <div class="cart-actions">
+        <button class="cart-btn-primary" id="checkoutBtn" type="button">Proceder al pago</button>
+      </div>
     </div>
-    <div class="cart-actions">
-      <button class="cart-btn-primary" id="checkoutBtn" type="button">Pagar</button>
-    </div>
+  </div>
+
+  <div id="checkoutView" class="checkout-view" hidden>
+    <form id="inlineCheckoutForm">
+      <button type="button" class="checkout-back" id="checkoutBack">← Volver al carrito</button>
+      <div class="checkout-intro">
+        <span>Finalizar compra</span>
+        <h4>Tus datos de entrega</h4>
+        <p>Completa tus datos. Tu camisa personalizada conservará el diseño, talla, prenda y color que escogiste.</p>
+      </div>
+      <div class="checkout-order" id="checkoutOrder"></div>
+      <label>Nombre completo<input required id="checkoutName" type="text" autocomplete="name"></label>
+      <label>Correo electrónico<input required id="checkoutEmail" type="email" autocomplete="email"></label>
+      <label>Teléfono<input required id="checkoutPhone" type="tel" autocomplete="tel"></label>
+      <label>Dirección de entrega<textarea required id="checkoutAddress" autocomplete="street-address"></textarea></label>
+      <label>Ciudad<input required id="checkoutCity" type="text" value="Bogotá" autocomplete="address-level2"></label>
+      <div class="checkout-total"><span>Total a pagar</span><strong id="checkoutTotal">$0 COP</strong></div>
+      <button class="cart-btn-primary checkout-pay" type="submit">Continuar al pago</button>
+      <p class="checkout-note">El formulario prepara el pedido. Para recibir pagos reales hay que conectar una pasarela como Wompi, Mercado Pago o PayU.</p>
+    </form>
   </div>
 </div>
 
-<script src="script.js"></script>
+<script src="js/cart.js"></script>
+<script>
+(function(){
+  function esc(s){return String(s??'').replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+  function renderCheckout(){
+    if(!window.CancheroCart) return;
+    const cart=CancheroCart.get();
+    const box=document.getElementById('checkoutOrder');
+    const totalEl=document.getElementById('checkoutTotal');
+    if(!box||!totalEl) return;
+    box.innerHTML=cart.length?cart.map(x=>`<div class="checkout-mini-item">
+      <div class="checkout-mini-thumb">${x.designImage?`<img src="${esc(x.designImage)}" alt="Diseño">`:''}</div>
+      <div><div class="checkout-mini-title">${esc(x.name)}</div>
+      <div class="checkout-mini-specs">${x.type==='custom'
+        ? `Prenda: ${esc(x.modelName||'')} · Talla: ${esc(x.size||'')} · Diseño: ${esc(x.designName||'Sin diseño')} · Color: ${esc(x.colorName||x.color||'')} · Cantidad: ${x.qty}`
+        : `${esc(x.details||'')} · Cantidad: ${x.qty}`}</div>
+      <b>${CancheroCart.money((Number(x.price)||0)*(Number(x.qty)||1))}</b></div>
+    </div>`).join(''):'<div class="cart-empty">Tu carrito está vacío.</div>';
+    totalEl.textContent=CancheroCart.money(CancheroCart.total(cart));
+  }
+  function openCheckout(){
+    if(!window.CancheroCart || !CancheroCart.get().length){alert('Tu carrito está vacío.');return;}
+    const panel=document.getElementById('cartPanel');
+    const view=document.getElementById('cartView');
+    const checkout=document.getElementById('checkoutView');
+    const title=document.getElementById('cartPanelTitle');
+    if(!panel||!view||!checkout) return;
+    panel.classList.add('open','checkout-open');
+    panel.setAttribute('aria-hidden','false');
+    view.style.display='none'; checkout.style.display='flex'; checkout.hidden=false;
+    if(title) title.textContent='Finalizar compra';
+    renderCheckout();
+  }
+  function closeCheckout(){
+    const panel=document.getElementById('cartPanel');
+    const view=document.getElementById('cartView');
+    const checkout=document.getElementById('checkoutView');
+    const title=document.getElementById('cartPanelTitle');
+    if(!panel) return;
+    panel.classList.remove('checkout-open');
+    if(view) view.style.display='flex';
+    if(checkout){checkout.style.display='none';checkout.hidden=true;}
+    if(title) title.textContent='Tu carrito';
+  }
+  window.CancheroInlineCheckout={open:openCheckout,close:closeCheckout,render:renderCheckout};
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#checkoutBtn')){ e.preventDefault(); openCheckout(); }
+    if(e.target.closest('#checkoutBack')){ e.preventDefault(); closeCheckout(); }
+  });
+  document.addEventListener('DOMContentLoaded',()=>{
+    if(location.hash==='#checkout') setTimeout(openCheckout,250);
+    const form=document.getElementById('inlineCheckoutForm');
+    if(form) form.addEventListener('submit',e=>{
+      e.preventDefault();
+      const order={customer:{name:document.getElementById('checkoutName').value,email:document.getElementById('checkoutEmail').value,phone:document.getElementById('checkoutPhone').value,address:document.getElementById('checkoutAddress').value,city:document.getElementById('checkoutCity').value},items:CancheroCart.get(),total:CancheroCart.total(CancheroCart.get()),createdAt:new Date().toISOString()};
+      localStorage.setItem('canchero_pending_order',JSON.stringify(order));
+      alert('Pedido preparado correctamente. Aquí conectaremos la pasarela de pago.');
+    });
+  });
+  window.addEventListener('hashchange',()=>{if(location.hash==='#checkout') openCheckout();});
+})();
+</script>
+<script src="js/script.js"></script>
+<script src="js/cart.js"></script>
 
 </body>
 </html>
