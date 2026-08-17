@@ -41,6 +41,6 @@ app.use("/api/orders",ordersRouter);
 
 app.use("/admin",express.static(path.join(__dirname,"..","admin")));
 
-app.listen(PORT,()=>
-  console.log(`Canchero: http://localhost:${PORT} | Admin: http://localhost:${PORT}/admin`)
-);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Canchero backend escuchando en el puerto ${PORT}`);
+});
