@@ -357,11 +357,128 @@
   document.addEventListener('DOMContentLoaded',()=>{
     if(location.hash==='#checkout') setTimeout(openCheckout,250);
     const form=document.getElementById('inlineCheckoutForm');
-    if(form) form.addEventListener('submit',e=>{
-      e.preventDefault();
-      const order={customer:{name:document.getElementById('checkoutName').value,email:document.getElementById('checkoutEmail').value,phone:document.getElementById('checkoutPhone').value,address:document.getElementById('checkoutAddress').value,city:document.getElementById('checkoutCity').value},items:CancheroCart.get(),total:CancheroCart.total(CancheroCart.get()),createdAt:new Date().toISOString()};
-      localStorage.setItem('canchero_pending_order',JSON.stringify(order));
-      alert('Pedido preparado correctamente. Aquí conectaremos la pasarela de pago.');
+    
+        if(form) form.addEventListener('submit', async e=>{
+        e.preventDefault();
+
+        const cart = CancheroCart.get();
+
+      if(!cart.length){
+        alert('Tu carrito está vacío.');
+        return;
+      }
+
+      const customer = {
+        name: document.getElementById('checkoutName').value.trim(),
+        email: document.getElementById('checkoutEmail').value.trim(),
+        phone: document.getElementById('checkoutPhone').value.trim()
+      };
+
+      const shipping = {
+        address: document.getElementById('checkoutAddress').value.trim(),
+        city: document.getElementById('checkoutCity').value.trim()
+      };
+
+      /*
+      * Convertimos el formato del carrito
+      * al formato que espera nuestro backend.
+      */
+      const items = cart.map(item => ({
+        type: item.type || 'product',
+        name: item.name || 'Producto',
+
+        modelId: item.modelId || null,
+        garment: item.modelName || null,
+
+        size: item.size || null,
+        color: item.color || null,
+
+        designId: item.designId || null,
+        designName: item.designName || null,
+        designSrc: item.designImage || null,
+
+        quantity: Number(item.qty || 1),
+        unitPrice: Number(item.price || 0),
+
+        /*
+        * Conservamos toda la información original
+        * del producto por si la necesitamos después.
+        */
+        originalItem: item
+      }));
+
+      const notes = 'Pedido creado desde la tienda Canchero de Barrio.';
+
+      const submitButton = form.querySelector('button[type="submit"]');
+
+      try {
+
+        submitButton.disabled = true;
+        submitButton.textContent = 'CREANDO PEDIDO...';
+
+        const response = await fetch('http://localhost:3000/api/orders', {
+          method: 'POST',
+
+          headers: {
+            'Content-Type': 'application/json'
+          },
+
+          body: JSON.stringify({
+            customer,
+            shipping,
+            items,
+            notes
+          })
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+          throw new Error(data.error || 'No se pudo crear el pedido.');
+        }
+
+        console.log('PEDIDO CREADO:', data);
+
+        /*
+        * Guardamos temporalmente la respuesta.
+        * Más adelante aquí conectaremos Wompi.
+        */
+        localStorage.setItem(
+          'canchero_last_order',
+          JSON.stringify(data.order)
+        );
+
+        alert(
+          '¡Pedido creado correctamente!\\n\\n' +
+          'Número de pedido: ' + data.order.reference + '\\n' +
+          'Total: $' +
+          Number(data.order.totalCop).toLocaleString('es-CO') +
+          ' COP'
+        );
+
+        /*
+        * IMPORTANTE:
+        * Todavía NO borramos el carrito.
+        *
+        * Cuando conectemos Wompi, el carrito se limpiará
+        * solamente después de confirmar el pago.
+        */
+
+      } catch(error) {
+
+        console.error('ERROR CREANDO PEDIDO:', error);
+
+        alert(
+          'No se pudo crear el pedido.\\n\\n' +
+          error.message
+        );
+
+      } finally {
+
+        submitButton.disabled = false;
+        submitButton.textContent = 'Continuar al pago';
+
+      }
     });
   });
   window.addEventListener('hashchange',()=>{if(location.hash==='#checkout') openCheckout();});
