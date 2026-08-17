@@ -10,8 +10,8 @@ Incluye Node.js + Express + PostgreSQL + API de pedidos + panel `/admin`.
 5. Ejecuta `npm install`.
 6. Ejecuta `npm run dev`.
 
-API: `http://localhost:3000`
-Panel: `http://localhost:3000/admin`
+API: `https://canchero-backend-r43k.onrender.com/api/health`
+Panel: `https://canchero-backend-r43k.onrender.com/admin/`
 
 El endpoint `POST /api/orders` recibe cliente, dirección y todos los productos del carrito. Guarda también talla, color, prenda y diseño de los personalizados.
 
