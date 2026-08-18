@@ -10,14 +10,17 @@ const ordersRouter = require("./orders");
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 
+// Dominios permitidos para acceder al backend
 const allowedOrigins = [
-  "https://canchero-backend-p671.onrender.com/api/health",
-  
+  "https://kevinnsena353-pixel.github.io"
 ];
 
 app.use(cors({
   origin: function(origin, callback) {
-    if (!origin) return callback(null, true);
+    // Permitir peticiones sin Origin (por ejemplo, algunas pruebas directas)
+    if (!origin) {
+      return callback(null, true);
+    }
 
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
@@ -30,17 +33,32 @@ app.use(cors({
   credentials: false
 }));
 
-app.use(helmet({contentSecurityPolicy:false}));
-app.use(express.json({limit:"1mb"}));
+app.use(helmet({
+  contentSecurityPolicy: false
+}));
 
-app.get("/api/health",(req,res)=>
-  res.json({ok:true,service:"canchero-backend"})
+app.use(express.json({
+  limit: "1mb"
+}));
+
+// Comprobar que el backend está funcionando
+app.get("/api/health", (req, res) => {
+  res.json({
+    ok: true,
+    service: "canchero-backend"
+  });
+});
+
+// Pedidos
+app.use("/api/orders", ordersRouter);
+
+// Panel administrativo
+app.use(
+  "/admin",
+  express.static(path.join(__dirname, "..", "admin"))
 );
 
-app.use("/api/orders",ordersRouter);
-
-app.use("/admin",express.static(path.join(__dirname,"..","admin")));
-
+// Iniciar servidor
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Canchero backend escuchando en el puerto ${PORT}`);
 });
