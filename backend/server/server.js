@@ -11,7 +11,7 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 
 const allowedOrigins = [
-  "https://canchero-backend-r43k.onrender.com/api/health",
+  "https://canchero-backend-p671.onrender.com/api/health",
   
 ];
 
